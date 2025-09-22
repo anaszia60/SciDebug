@@ -1,6 +1,7 @@
 {
-  "name": "scifix-nextjs",
-  "version": "0.1.0",
+  "name": "scifix",
+  "version": "1.0.0",
+  "description": "A modern Next.js application built with TypeScript and Tailwind CSS",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
