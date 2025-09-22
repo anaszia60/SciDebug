@@ -9,9 +9,9 @@ import { motion } from 'framer-motion';
 
 interface DebugResult {
   success: boolean;
-  originalCode: string;
-  fixedCode: string;
-  explanation: string;
+  originalCode?: string;
+  fixedCode?: string;
+  explanation?: string;
   error?: string;
   downloadUrls?: {
     fixedCode: string;
@@ -49,9 +49,6 @@ export default function Home() {
     } catch (error) {
       setResult({
         success: false,
-        originalCode: '',
-        fixedCode: '',
-        explanation: '',
         error: 'An unexpected error occurred',
       });
     } finally {

@@ -7,9 +7,9 @@ import CodeViewer from './CodeViewer';
 import ScienceExplanation from './ScienceExplanation';
 
 interface CodeTabsProps {
-  originalCode: string;
-  fixedCode: string;
-  explanation: string;
+  originalCode?: string;
+  fixedCode?: string;
+  explanation?: string;
   downloadUrls?: {
     fixedCode: string;
     explanation: string;
@@ -98,12 +98,12 @@ export default function CodeTabs({ originalCode, fixedCode, explanation, downloa
                 <div className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <CodeViewer
-                      code={originalCode}
+                      code={originalCode || ''}
                       title="Original Code"
                       variant="original"
                     />
                     <CodeViewer
-                      code={fixedCode}
+                      code={fixedCode || ''}
                       title="Fixed Code"
                       variant="fixed"
                     />
@@ -127,7 +127,7 @@ export default function CodeTabs({ originalCode, fixedCode, explanation, downloa
               
               {activeTab === 'explanation' && (
                 <ScienceExplanation
-                  explanation={explanation}
+                  explanation={explanation || ''}
                   downloadUrl={downloadUrls?.explanation}
                 />
               )}
