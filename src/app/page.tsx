@@ -13,10 +13,6 @@ interface DebugResult {
   fixedCode?: string;
   explanation?: string;
   error?: string;
-  downloadUrls?: {
-    fixedCode: string;
-    explanation: string;
-  };
 }
 
 export default function Home() {
@@ -183,7 +179,6 @@ export default function Home() {
               originalCode={result.originalCode}
               fixedCode={result.fixedCode}
               explanation={result.explanation}
-              downloadUrls={result.downloadUrls}
             />
           </motion.div>
         )}

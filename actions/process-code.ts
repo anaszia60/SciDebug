@@ -1,8 +1,6 @@
 'use server';
 
 import { SciFixAgent } from '@/lib/scifix-agent';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 
 export async function processCode(formData: FormData) {
   try {
@@ -49,37 +47,12 @@ export async function processCode(formData: FormData) {
       return result;
     }
 
-    // For deployment, we'll skip file saving and just return the content
-    // The download URLs will be generated but files won't be saved in serverless environment
-    const timestamp = Date.now();
-    const fixedCodeFilename = `fixed_${timestamp}.py`;
-    const explanationFilename = `explanation_${timestamp}.txt`;
-
-    // Try to save files, but don't fail if it doesn't work in serverless environment
-    try {
-      const outputDir = path.join(process.cwd(), 'output');
-      await mkdir(outputDir, { recursive: true });
-      
-      // Save fixed code
-      const fixedCodePath = path.join(outputDir, fixedCodeFilename);
-      await writeFile(fixedCodePath, result.fixedCode, 'utf8');
-
-      // Save explanation
-      const explanationPath = path.join(outputDir, explanationFilename);
-      await writeFile(explanationPath, result.explanation, 'utf8');
-    } catch (error) {
-      console.log('File saving skipped in serverless environment:', error);
-    }
-
+    // Return the result without file saving (serverless compatible)
     return {
       success: true,
       originalCode: result.originalCode,
       fixedCode: result.fixedCode,
       explanation: result.explanation,
-      downloadUrls: {
-        fixedCode: `/api/download/${fixedCodeFilename}`,
-        explanation: `/api/download/${explanationFilename}`,
-      },
     };
   } catch (error: any) {
     console.error('Error processing code:', error);

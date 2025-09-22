@@ -10,13 +10,9 @@ interface CodeTabsProps {
   originalCode?: string;
   fixedCode?: string;
   explanation?: string;
-  downloadUrls?: {
-    fixedCode: string;
-    explanation: string;
-  };
 }
 
-export default function CodeTabs({ originalCode, fixedCode, explanation, downloadUrls }: CodeTabsProps) {
+export default function CodeTabs({ originalCode, fixedCode, explanation }: CodeTabsProps) {
   const [activeTab, setActiveTab] = useState<'comparison' | 'explanation'>('comparison');
 
   const tabs = [
