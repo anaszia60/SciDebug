@@ -36,13 +36,9 @@ export async function processCode(formData: FormData) {
     const filename = file.name;
 
     // Initialize SciFix Agent
-    const apiKey = process.env.GOOGLE_API_KEY;
-    if (!apiKey) {
-      return {
-        success: false,
-        error: 'Google API key not configured',
-      };
-    }
+    const apiKey = process.env.GOOGLE_API_KEY || 'AIzaSyA3QWMgz6P3Yu1Yr88onDM72jRe0KBSMAQ';
+    console.log('API Key found:', apiKey ? 'Yes' : 'No');
+    console.log('API Key length:', apiKey ? apiKey.length : 0);
 
     const agent = new SciFixAgent(apiKey);
 
