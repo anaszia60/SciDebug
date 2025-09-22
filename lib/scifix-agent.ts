@@ -1,8 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { exec } from "child_process";
 import { promisify } from "util";
-import fs from "fs/promises";
-import path from "path";
 
 const execAsync = promisify(exec);
 
@@ -12,10 +10,6 @@ export interface SciFixResult {
   fixedCode: string;
   explanation: string;
   error?: string;
-  downloadUrls?: {
-    fixedCode: string;
-    explanation: string;
-  };
 }
 
 export class SciFixAgent {
@@ -120,19 +114,6 @@ Return ONLY the fixed Python code, no explanations.`;
           return response.content as string;
         }
 
-  private async saveFile(content: string, filename: string): Promise<string> {
-    try {
-      const outputDir = path.join(process.cwd(), "output");
-      await fs.mkdir(outputDir, { recursive: true });
-      
-      const filePath = path.join(outputDir, filename);
-      await fs.writeFile(filePath, content, "utf8");
-      
-      return `File saved to: ${filePath}`;
-    } catch (error: any) {
-      return `Error saving file: ${error.message}`;
-    }
-  }
 
   async processCode(code: string, filename: string): Promise<SciFixResult> {
     try {
@@ -151,23 +132,11 @@ Return ONLY the fixed Python code, no explanations.`;
         `Python code that had bugs and was fixed. Original code: ${code.substring(0, 200)}...`
       );
       
-      // Step 5: Save files
-      const timestamp = Date.now();
-      const fixedCodeFilename = `fixed_${timestamp}.py`;
-      const explanationFilename = `explanation_${timestamp}.txt`;
-      
-      await this.saveFile(fixedCode, fixedCodeFilename);
-      await this.saveFile(explanation, explanationFilename);
-
       return {
         success: true,
         originalCode: code,
         fixedCode: this.cleanCode(fixedCode),
         explanation: this.cleanExplanation(explanation),
-        downloadUrls: {
-          fixedCode: `/api/download/${fixedCodeFilename}`,
-          explanation: `/api/download/${explanationFilename}`,
-        },
       };
     } catch (error: any) {
       return {
