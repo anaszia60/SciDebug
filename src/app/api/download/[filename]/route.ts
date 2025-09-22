@@ -14,25 +14,12 @@ export async function GET(
       return NextResponse.json({ error: 'Invalid filename' }, { status: 400 });
     }
 
-    const filePath = path.join(process.cwd(), 'output', filename);
+    // In serverless environments, files might not be saved
+    // Return a message explaining this limitation
+    return NextResponse.json({ 
+      error: 'File download not available in serverless environment. The fixed code and explanation are displayed in the UI above.' 
+    }, { status: 404 });
     
-    try {
-      const fileContent = await readFile(filePath, 'utf8');
-      
-      // Determine content type based on file extension
-      const contentType = filename.endsWith('.py') 
-        ? 'text/x-python' 
-        : 'text/plain';
-      
-      return new NextResponse(fileContent, {
-        headers: {
-          'Content-Type': contentType,
-          'Content-Disposition': `attachment; filename="${filename}"`,
-        },
-      });
-    } catch (error) {
-      return NextResponse.json({ error: 'File not found' }, { status: 404 });
-    }
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

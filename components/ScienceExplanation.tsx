@@ -9,10 +9,9 @@ import 'katex/dist/katex.min.css';
 
 interface ScienceExplanationProps {
   explanation: string;
-  downloadUrl?: string;
 }
 
-export default function ScienceExplanation({ explanation, downloadUrl }: ScienceExplanationProps) {
+export default function ScienceExplanation({ explanation }: ScienceExplanationProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -38,18 +37,6 @@ export default function ScienceExplanation({ explanation, downloadUrl }: Science
               <p className="text-sm text-gray-400">Learn the science behind the code</p>
             </div>
           </div>
-          {downloadUrl && (
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              href={downloadUrl}
-              download
-              className="flex items-center px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-cyan-500/25"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download
-            </motion.a>
-          )}
         </div>
 
         {/* Content */}

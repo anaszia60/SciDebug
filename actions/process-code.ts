@@ -49,21 +49,27 @@ export async function processCode(formData: FormData) {
       return result;
     }
 
-    // Save files to output directory
-    const outputDir = path.join(process.cwd(), 'output');
-    await mkdir(outputDir, { recursive: true });
-
+    // For deployment, we'll skip file saving and just return the content
+    // The download URLs will be generated but files won't be saved in serverless environment
     const timestamp = Date.now();
     const fixedCodeFilename = `fixed_${timestamp}.py`;
     const explanationFilename = `explanation_${timestamp}.txt`;
 
-    // Save fixed code
-    const fixedCodePath = path.join(outputDir, fixedCodeFilename);
-    await writeFile(fixedCodePath, result.fixedCode, 'utf8');
+    // Try to save files, but don't fail if it doesn't work in serverless environment
+    try {
+      const outputDir = path.join(process.cwd(), 'output');
+      await mkdir(outputDir, { recursive: true });
+      
+      // Save fixed code
+      const fixedCodePath = path.join(outputDir, fixedCodeFilename);
+      await writeFile(fixedCodePath, result.fixedCode, 'utf8');
 
-    // Save explanation
-    const explanationPath = path.join(outputDir, explanationFilename);
-    await writeFile(explanationPath, result.explanation, 'utf8');
+      // Save explanation
+      const explanationPath = path.join(outputDir, explanationFilename);
+      await writeFile(explanationPath, result.explanation, 'utf8');
+    } catch (error) {
+      console.log('File saving skipped in serverless environment:', error);
+    }
 
     return {
       success: true,

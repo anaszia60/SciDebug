@@ -108,27 +108,12 @@ export default function CodeTabs({ originalCode, fixedCode, explanation, downloa
                       variant="fixed"
                     />
                   </div>
-                  {downloadUrls?.fixedCode && (
-                    <div className="flex justify-center">
-                      <motion.a
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        href={downloadUrls.fixedCode}
-                        download
-                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
-                      >
-                        <Download className="h-4 w-4 mr-2" />
-                        Download Fixed Code
-                      </motion.a>
-                    </div>
-                  )}
                 </div>
               )}
               
               {activeTab === 'explanation' && (
                 <ScienceExplanation
                   explanation={explanation || ''}
-                  downloadUrl={downloadUrls?.explanation}
                 />
               )}
             </motion.div>
