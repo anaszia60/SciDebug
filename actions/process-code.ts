@@ -5,6 +5,7 @@ import { SciFixAgent } from '@/lib/scifix-agent';
 export async function processCode(formData: FormData) {
   try {
     const file = formData.get('file') as File;
+    const apiKey = formData.get('apiKey') as string;
     
     if (!file) {
       return {
@@ -34,11 +35,11 @@ export async function processCode(formData: FormData) {
     const filename = file.name;
 
     // Initialize SciFix Agent
-    const apiKey = process.env.GOOGLE_API_KEY || 'AIzaSyA3QWMgz6P3Yu1Yr88onDM72jRe0KBSMAQ';
-    console.log('API Key found:', apiKey ? 'Yes' : 'No');
-    console.log('API Key length:', apiKey ? apiKey.length : 0);
+    const finalApiKey = apiKey || process.env.GOOGLE_API_KEY || 'AIzaSyA3QWMgz6P3Yu1Yr88onDM72jRe0KBSMAQ';
+    console.log('API Key found:', finalApiKey ? 'Yes' : 'No');
+    console.log('API Key length:', finalApiKey ? finalApiKey.length : 0);
 
-    const agent = new SciFixAgent(apiKey);
+    const agent = new SciFixAgent(finalApiKey);
 
     // Process the code
     const result = await agent.processCode(code, filename);

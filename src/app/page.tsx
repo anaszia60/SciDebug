@@ -19,6 +19,8 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [result, setResult] = useState<DebugResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiKey, setApiKey] = useState('AIzaSyA3QWMgz6P3Yu1Yr88onDM72jRe0KBSMAQ');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
@@ -32,6 +34,13 @@ export default function Home() {
 
   const handleDebug = async () => {
     if (!selectedFile) return;
+    if (!apiKey.trim()) {
+      setResult({
+        success: false,
+        error: 'Please enter your Gemini API key',
+      });
+      return;
+    }
 
     setIsLoading(true);
     setResult(null);
@@ -39,6 +48,7 @@ export default function Home() {
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('apiKey', apiKey);
       
       const debugResult = await processCode(formData);
       setResult(debugResult);
@@ -127,11 +137,61 @@ export default function Home() {
               onClear={handleClear}
             />
 
+            {/* API Key Input */}
+            <div className="mt-6">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-sm font-medium text-gray-300">
+                  Gemini API Key
+                </label>
+                <button
+                  onClick={() => setShowApiKeyInput(!showApiKeyInput)}
+                  className="text-xs text-cyan-400 hover:text-cyan-300 underline"
+                >
+                  {showApiKeyInput ? 'Hide' : 'Show'} Input
+                </button>
+              </div>
+              
+              {showApiKeyInput && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-3"
+                >
+                  <input
+                    type="password"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    placeholder="Enter your Gemini API key (AIza...)"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-400">
+                    Get your free API key from{' '}
+                    <a 
+                      href="https://makersuite.google.com/app/apikey" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-cyan-400 hover:text-cyan-300 underline"
+                    >
+                      Google AI Studio
+                    </a>
+                  </p>
+                </motion.div>
+              )}
+              
+              {!showApiKeyInput && (
+                <div className="flex items-center space-x-2 text-sm text-gray-400">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>Using default API key</span>
+                </div>
+              )}
+            </div>
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleDebug}
-              disabled={!selectedFile || isLoading}
+              disabled={!selectedFile || isLoading || !apiKey.trim()}
               className="mt-6 w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-cyan-500/25 disabled:shadow-none"
             >
               {isLoading ? (
